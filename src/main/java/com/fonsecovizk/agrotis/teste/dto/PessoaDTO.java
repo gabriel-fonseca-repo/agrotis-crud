@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
-public class CriarPessoaDTO {
+public class PessoaDTO {
 
   @NotBlank(message = "O nome não pode ser vazio")
   private String nome;

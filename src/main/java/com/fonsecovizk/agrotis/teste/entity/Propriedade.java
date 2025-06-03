@@ -14,6 +14,14 @@ public class Propriedade {
 
   private String nome;
 
+  public Propriedade(String nome) {
+    this.nome = nome;
+  }
+
+  public Propriedade() {
+
+  }
+
   public Long getId() {
     return id;
   }

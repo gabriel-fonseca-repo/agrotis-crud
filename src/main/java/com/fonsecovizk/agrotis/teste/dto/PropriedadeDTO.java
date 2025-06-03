@@ -1,13 +1,24 @@
 package com.fonsecovizk.agrotis.teste.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class PropriedadeDTO {
 
   private Long id;
+
+  @NotBlank(message = "O nome não pode ser vazio")
   private String nome;
 
   public PropriedadeDTO(Long id, String nome) {
     this.id = id;
     this.nome = nome;
+  }
+
+  public PropriedadeDTO(String nome) {
+    this.nome = nome;
+  }
+
+  public PropriedadeDTO() {
   }
 
   public Long getId() {

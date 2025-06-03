@@ -14,6 +14,13 @@ public class Laboratorio {
 
   private String nome;
 
+  public Laboratorio(String nome) {
+    this.nome = nome;
+  }
+
+  public Laboratorio() {
+  }
+
   public Long getId() {
     return id;
   }

@@ -1,7 +1,7 @@
 package com.fonsecovizk.agrotis.teste.service;
 
 import com.fonsecovizk.agrotis.teste.dto.ConsultarPessoasDTO;
-import com.fonsecovizk.agrotis.teste.dto.CriarPessoaDTO;
+import com.fonsecovizk.agrotis.teste.dto.PessoaDTO;
 import com.fonsecovizk.agrotis.teste.entity.Laboratorio;
 import com.fonsecovizk.agrotis.teste.entity.Pessoa;
 import com.fonsecovizk.agrotis.teste.entity.Propriedade;
@@ -32,7 +32,7 @@ public class PessoaService {
     return pessoaRepository.findAll(PessoaSpecification.consultarPessoasComFiltro(consultarPessoasDTO));
   }
 
-  public void criarPessoa(CriarPessoaDTO pessoa) {
+  public Pessoa criarPessoa(PessoaDTO pessoa) {
 
     Pessoa novaPessoa = new Pessoa();
     novaPessoa.setNome(pessoa.getNome());
@@ -46,8 +46,44 @@ public class PessoaService {
 
     novaPessoa.setObservacoes(pessoa.getObservacoes());
 
-    pessoaRepository.save(novaPessoa);
-    pessoaRepository.flush();
+    return pessoaRepository.saveAndFlush(novaPessoa);
+  }
 
+  public void atualizarPessoa(Long id, PessoaDTO pessoa) {
+    Pessoa pessoaExistente = pessoaRepository.findById(id)
+      .orElseThrow(() -> new RuntimeException("Pessoa não encontrada com o ID: " + id));
+
+    if (pessoa.getNome() != null && !pessoa.getNome().isEmpty()) {
+      pessoaExistente.setNome(pessoa.getNome());
+    }
+
+    if (pessoa.getDataInicial() != null)
+      pessoaExistente.setDataInicial(pessoa.getDataInicial());
+    if (pessoa.getDataFinal() != null)
+      pessoaExistente.setDataFinal(pessoa.getDataFinal());
+
+    if (pessoa.getLaboratorio() != null && pessoa.getLaboratorio().getId() != null) {
+      Laboratorio laboratorio = laboratorioService.consultarPorId(pessoa.getLaboratorio().getId());
+      pessoaExistente.setLaboratorio(laboratorio);
+    }
+
+    if (pessoa.getInfosPropriedade() != null && pessoa.getInfosPropriedade().getId() != null) {
+      Propriedade propriedade = propriedadeService.consultarPorId(pessoa.getInfosPropriedade().getId());
+      pessoaExistente.setPropriedade(propriedade);
+    }
+
+    if (pessoa.getObservacoes() != null && !pessoa.getObservacoes().isEmpty()) {
+      pessoaExistente.setObservacoes(pessoa.getObservacoes());
+    }
+
+    pessoaRepository.saveAndFlush(pessoaExistente);
+  }
+
+  public void deletarPessoa(Long id) {
+    Pessoa pessoaExistente = pessoaRepository.findById(id)
+      .orElseThrow(() -> new RuntimeException("Pessoa não encontrada com o ID: " + id));
+
+    pessoaRepository.delete(pessoaExistente);
+    pessoaRepository.flush();
   }
 }

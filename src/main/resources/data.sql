@@ -1,0 +1,1 @@
+insert into laboratorio (nome) values ('Laboratório A');
